@@ -20,14 +20,10 @@ import 'rxjs/add/operator/switchMap';
 })
 export class DialogViewComponent implements OnInit{
     
-    public dialog           :Dialog;
+    public dialog :Dialog;
     public selectedMessages :number[] = [];
 
-    public isLoadingDialog                 :boolean = true;
-    public isLoadingMessagesHistory        :boolean = false;
-    public cannotLoadingMessageHistoryMore :boolean = false;
-
-    public showBottomScrollingButton = false;
+    public isLoadingDialog  :boolean = true;
 
     private dialogHelper :DialogHelper;
 
@@ -64,15 +60,14 @@ export class DialogViewComponent implements OnInit{
     
 
     ngAfterViewInit(){
-        console.log(131223132);
         let elem = this.textArea.nativeElement;
-        console.log(elem);
         
+        // Send event userTyping to wsService
         Observable.fromEvent(elem, "keyup")
             .filter( (event :any) => {
                 return !(event.code == "Backspace" || event.code == "Delete" || event.code == "Escape")
             })
-            .debounceTime(500)
+            .debounceTime(200)
             .subscribe( (event :any) => {
                this.wsChatService.emitEvent('typing', JSON.stringify({
                     dialogID : this.dialog.id,

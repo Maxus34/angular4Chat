@@ -46,7 +46,7 @@ export class DialogHelper {
     }
     
     protected subscribeOnWsEvents(){
-        this.wsChatService.events.newMessage
+        this.wsChatService.events.messageCreated
             .subscribe( async (event :any) => {
                 let dialogId = event.dialogId;
     
@@ -66,16 +66,15 @@ export class DialogHelper {
     }
 
 
-    public async handleNewMessage(messageData :any){
 
-        console.log(`DialogHelper got new Message`, messageData);
-
+    // ------------- WS Events Handlers ----------------------
+    protected async handleNewMessage(messageData :any){
         let message = await this.messageFactory.getMessageFromData(messageData);
 
         this.currentDialog.messages.push(message);
     }
     
-    public async handleMessageUpdated(messageData :any){
+    protected async handleMessageUpdated(messageData :any){
         
         let message = this.dialog.messages.find( (message) => {
             return message.id == messageData.id;
@@ -83,8 +82,30 @@ export class DialogHelper {
 
         message.isNew = messageData.isNew;
     }
+    // -------------------------------------------------------   
+   
 
 
+    // ------------- WS EventEmitters ------------------------
+    public async seeMessage(message :Message){
+        if (!message.isNew)
+            return;
+        
+        this.apiService.apiPOST('messages.see', {dialogId: this.dialog.id, messageId: message.id}).toPromise()
+            .then( (response) => {
+                if (response.item){
+                    message.isNew = false;
+                }
+            })
+            .catch( (error) => {
+                console.log(error); 
+            });
+    }
+    // -------------------------------------------------------
+    
+
+
+    // --------- Methods for dialog handling -----------------
     public async loadMessages(){
         let response;
 
@@ -143,21 +164,6 @@ export class DialogHelper {
         
         return message;
     }
-    
-    public async seeMessage(message :Message){
-        if (!message.isNew)
-            return;
-        
-        this.apiService.apiPOST('messages.see', {dialogId: this.dialog.id, messageId: message.id}).toPromise()
-            .then( (response) => {
-                if (response.item){
-                    message.isNew = false;
-                }
-            })
-            .catch( (error) => {
-                console.log(error); 
-            });
-    }
 
     public async loadDialogHistory(lastMessageId :number){
         return this.apiService.apiPOST("messages.getBeforeId", {
@@ -188,27 +194,12 @@ export class DialogHelper {
     }
 
     public async updateDialog(title, users = []){
-        let response = await this.apiService.apiPOST('dialogs.update', { id: this.dialog.id, users, title})
-        .toPromise();
+        let response = await this.apiService.apiPOST('dialogs.update', { id: this.dialog.id, users, title}).toPromise();
 
         if (response.result) {
-            this.currentDialog.title = "updated!";
-            await this.updateCurrentDialog(response.item);
+            await this.dialogFactory.updateDialogFromData(this.currentDialog, response.item);
             return true;
-
         } 
     }
-
-    protected async updateCurrentDialog(data){
-        this.currentDialog.title = data.title;
-        this.currentDialog.isActive = data.isActive;
-
-        this.currentDialog.dialogUsers = [];
-        
-        for (let i = 0; i < data.dialogReferences.length; i++){
-            let user = await this.userService.getById(data.dialogReferences[i].userId);
-
-            this.currentDialog.dialogUsers.push(user);
-        }
-    }
+    // --------------------------------------------------------
 }

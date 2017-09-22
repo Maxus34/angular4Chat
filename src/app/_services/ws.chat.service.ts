@@ -21,9 +21,12 @@ export class WsChatService {
     private socketPort: string = `:3000`;
     
     public events = {
-        typingUsers : new Subject(),
-        newMessage  : new Subject(),
-        messageUpdated : new Subject(),
+        userTyping: new Subject(),
+        userOnline: new Subject(),
+        messageCreated: new Subject(),
+        messageUpdated: new Subject(),
+        dialogCreated: new Subject(), 
+        dialogUpdated: new Subject(), 
     };
 
     public constructor(
@@ -40,18 +43,18 @@ export class WsChatService {
     
     protected subcsribeOnSocketEvents(){
 
-        this.socket.on('typing', (evt :any) => {
+        this.socket.on('user.typing', (evt :any) => {
             try{ evt = JSON.parse(evt);}
             catch(e) { console.log(e); }
 
-            this.events.typingUsers.next(evt);
+            this.events.userTyping.next(evt);
         });
 
         this.socket.on('message.created', (evt :any) => {
             try{ evt = JSON.parse(evt);}
             catch(e) { console.log(e); }
 
-            this.events.newMessage.next(evt);
+            this.events.messageCreated.next(evt);
         });
 
         this.socket.on('message.updated', (evt :any) => {
@@ -60,7 +63,20 @@ export class WsChatService {
 
             this.events.messageUpdated.next(evt);
         });
+        
+        this.socket.on('dialog.created', (evt: any) => {
+            try{ evt = JSON.parse(evt);}
+            catch(e) { console.log(e); }
 
+            this.events.dialogCreated.next(evt);
+        });
+
+        this.socket.on('dialog.created', (evt: any) => {
+            try{ evt = JSON.parse(evt);}
+            catch(e) { console.log(e); }
+
+            this.events.dialogUpdated.next(evt);
+        });
     }
 
     private connectWebSocket() {

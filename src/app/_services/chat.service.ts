@@ -27,6 +27,14 @@ export class ChatService implements OnInit{
     ) { }
 
     ngOnInit(){
+        this.wsChatService.events.dialogCreated
+            .subscribe( (event :any) => {
+
+            });
+        this.wsChatService.events.dialogUpdated
+            .subscribe( (event :any) => {
+
+            });
     }
    
     async getDialogsList () { 

@@ -9,8 +9,7 @@ import { DialogHelper } from "../../_helpers/dialog.helper";
     selector: `typing-users`,
     template: `
         <span *ngFor="let i = index; let user of typingUsers">
-           {{user.username}}
-           <span *ngIf="i < typingUsers.length - 1">, </span>
+           {{user.username}} <span *ngIf="i < typingUsers.length - 1">, </span>
         </span>
         <span *ngIf="typingUsers.length > 0">are typing...</span>
     `,
@@ -20,6 +19,8 @@ import { DialogHelper } from "../../_helpers/dialog.helper";
 export class TypingUsersComponent implements OnInit{
     
     public typingUsers :User[] = [];
+    
+    protected deleteTypingUserTimeout = 2121;
 
     @Input() public dialogId :number;
 
@@ -29,20 +30,29 @@ export class TypingUsersComponent implements OnInit{
     ){}
 
     public ngOnInit(){
-        this.wsChatService.events.typingUsers
+        this.wsChatService.events.userTyping
             .filter( (evt :any) => {
                 return evt.dialogId == this.dialogId
             })
             .subscribe( async (evt :any) => {
-                console.log(`In TypingUService: `, evt);
-
                 let user = await this.userService.getById(evt.userId);
-                this.typingUsers.push(user);
+                this.addTypingUser(user);
 
-                setTimeout( () => this.deleteTypingUser(user), 1500);
+                setTimeout( () => this.deleteTypingUser(user), this.deleteTypingUserTimeout);
             })
     }
+    
+    protected addTypingUser(user :User){
+        
+        let userExists = this.typingUsers.find( (item) => {
+            return item.id == user.id;
+        });
 
+        if (!userExists){
+            this.typingUsers.push(user);
+        }
+
+    }
 
     protected deleteTypingUser(user :User){
         this.typingUsers.forEach( (item, i, arr) => {

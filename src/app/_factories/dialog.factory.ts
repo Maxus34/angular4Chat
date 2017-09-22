@@ -16,7 +16,7 @@ export class DialogFactory {
         private apiService  :ApiService,
     ) { }
 
-    public async getDialogFromData(data) :Promise<Dialog> {
+    public async getDialogFromData(data :any) :Promise<Dialog> {
         let dialog = new Dialog();
 
         dialog.id = data.id;
@@ -37,5 +37,18 @@ export class DialogFactory {
         }
 
         return dialog;
+    }
+
+    public async updateDialogFromData(dialog :Dialog, data :any) :Promise<any> {
+
+        dialog.title       = data.title;
+        dialog.isActive    = data.isActive;
+        dialog.dialogUsers = [];
+        
+        for (let i = 0; i < data.dialogReferences.length; i++){
+            let user = await this.userService.getById(data.dialogReferences[i].userId);
+
+            dialog.dialogUsers.push(user);
+        }
     }
 }

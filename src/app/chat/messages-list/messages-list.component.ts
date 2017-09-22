@@ -171,8 +171,11 @@ export class MessagesListComponent implements OnInit{
         
         const messageContainerElem = this.messageContainer.nativeElement;           
         
+        //TODO: придумать как отмечать прочитанными только те сообщения, 
+        // которые видны в данный момент. 
+        // не получается получить messageItemComponent.nativeElement;
+
         return async (event :QueryList<MessageItemComponent>) => {
-            
             let elements = event.toArray();
             
             let elementsCount = elements.length;
