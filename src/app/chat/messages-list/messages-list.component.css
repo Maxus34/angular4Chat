@@ -1,0 +1,17 @@
+.dialog-loading,
+.dialog-start{
+    margin: 15px auto 10px auto;  
+    width: 100px;
+}
+.bottom-scrolling{
+    position: absolute;
+    bottom: 1px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px 4px 8px;
+    border: 1px solid #3498db;
+    border-radius: 10px;
+    background-color: #C9EAFF;
+    margin: 5px auto 10px auto;
+    cursor: pointer;
+}

@@ -1,0 +1,11 @@
+<div class="messages-list" #messageContainer>
+    <div *ngIf="isLoadingMessagesHistory || isLoadingMessages" class="dialog-loading"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>
+    <div *ngIf="cannotLoadingMoreMessagesHistory" class="dialog-start">start of the dialog</div>
+
+    <div *ngIf="!isLoadingMessages">
+        <message-item *ngFor="let message of dialog.messages" [message]="message" (onSelect)="onSelectMessage($event)" #messages>
+        </message-item>
+    </div>
+</div>
+
+<div *ngIf="showBottomScrollingButton" (click)="scrollMessageContainerToBottom()" class="bottom-scrolling">to bottom <i class="fa fa-arrow-down" aria-hidden="true"></i></div>

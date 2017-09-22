@@ -1,0 +1,497 @@
+@font-face {
+  src: url("./fonts/RobotoCondensed-Regular.ttf") format("truetype");
+  font-family: "RobotoCondensed-Regular";
+}
+
+@font-face {
+  src: url("./fonts/RobotoCondensed-Bold.ttf") format("truetype");
+  font-family: "RobotoCondensed-Bold";
+}
+
+body {
+  margin: 0;
+  background-color: #ecf0f1;
+  font-family: RobotoCondensed-Regular;
+}
+
+.app {
+  display: flex;
+  max-width: 64em;
+  margin-left: auto;
+  margin-right: auto;
+  flex-direction: column;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  background-color: #FFF;
+}
+
+.app-header button {
+  display: block;
+  width: 34.66667px;
+  height: 34.66667px;
+  border: none;
+  border-radius: 100%;
+  background-color: #2ecc71;
+  transition: 260ms ease-in;
+}
+
+.app-header button img {
+  max-width: 18px;
+}
+
+@media (min-width: 767px) {
+  .app-header button img {
+    max-width: 24.33333px;
+  }
+}
+
+.app-header button:hover, .app-header button:focus, .app-header button:active {
+  background-color: #25a25a;
+  cursor: pointer;
+}
+
+.app-messages {
+  flex: 1;
+  height: 480px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.app-messages .message {
+  display: flex;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 3px;
+  flex-basis: 100%;
+  background-color: #FFF;
+}
+
+.app-messages .message-selected, .app-messages .message-new, .app-messages .message-outgoing, .app-messages .message-incoming {
+  transition: all 250ms ease-in;
+}
+
+.app-messages .message-new {
+  border-left: 1em solid #2980b9;
+}
+
+.app-messages .message-selected {
+  background-color: lightgoldenrodyellow;
+}
+
+@media (min-width: 767px) {
+  .app-messages .message-outgoing {
+    margin-left: 7.5%;
+  }
+  .app-messages .message-incoming {
+    margin-right: 7.5%;
+  }
+}
+
+.app-messages .message-user {
+  text-align: center;
+  margin-right: 1rem;
+}
+
+.app-messages .message-user-avatar {
+  width: 64px;
+  margin-bottom: 0.5rem;
+}
+
+.app-messages .message-user-name {
+  color: #2980b9;
+  font-family: RobotoCondensed-Bold, sans-serif;
+}
+
+.app-messages .message-user a {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+}
+
+.app-messages .message-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.app-messages .message-content p {
+  margin-top: 0;
+}
+
+.app-messages .message-content time {
+  font-size: .85em;
+  color: grey;
+}
+
+.app-control-panel {
+  display: flex;
+  background-color: #FFF;
+}
+
+@media (min-width: 767px) {
+  .app-control-panel {
+    min-height: 128px;
+  }
+}
+
+.app-control-panel textarea {
+  flex-basis: 100%;
+  border: 1px solid #EEE;
+  resize: none;
+  padding: 0.5rem;
+  font-family: RobotoCondensed-Regular, sans-serif;
+  font-size: 1em;
+  color: #333;
+}
+
+.app-control-panel button {
+  width: 52px;
+  height: 52px;
+  margin-left: 1rem;
+  outline: none;
+  border: none;
+  border-radius: 3px;
+  background-color: #3498db;
+  color: #eee;
+  transition: 260ms ease-in;
+}
+
+.app-control-panel button img {
+  max-width: 25.6px;
+}
+
+.app-control-panel button:hover, .app-control-panel button:focus, .app-control-panel button:active {
+  background-color: #217dbb;
+  cursor: pointer;
+}
+
+.app-control-panel .buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header, .app-messages, .app-control-panel {
+  box-sizing: border-box;
+  border-radius: 3px;
+  padding: 1rem;
+}
+
+.app .users {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.app .users li {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  width: 40px;
+}
+
+.app .users li a img {
+  max-width: 100%;
+  border-radius: 20px;
+}
+
+.pull-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.pull-left {
+  margin-right: auto;
+}
+
+@media screen and (min-width: 768px) {
+  .app-header button, .app-control-panel button {
+    width: 52px;
+    height: 52px;
+  }
+  .app-header {
+    min-height: 64px;
+  }
+}
+
+.app-dialog {
+  flex: 1;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  box-sizing: border-box;
+  border-radius: 3px;
+  overflow-y: scroll;
+}
+
+.app-dialog__item {
+  position: relative;
+  display: flex;
+  box-sizing: inherit;
+  border-radius: inherit;
+  padding: .5rem;
+  margin: 1rem;
+  background-color: #fff;
+}
+
+.app-dialog__item-img {
+  float: left;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  width: 64px;
+  max-width: 100%;
+  border-right: 1px solid #eee;
+}
+
+.app-dialog__item-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex: 1;
+  padding: 1rem;
+}
+
+.app-dialog__item-close {
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.app-dialog__item-close:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: block;
+  width: 24px;
+  height: 3px;
+  transform: rotate(45deg);
+  background-color: #333;
+}
+
+.app-dialog__item-close:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: block;
+  width: 24px;
+  height: 3px;
+  transform: rotate(-45deg);
+  background-color: #333;
+}
+
+.app-dialog__item-close:hover:before, .app-dialog__item-close:hover:after, .app-dialog__item-close:focus:before, .app-dialog__item-close:focus:after, .app-dialog__item-close:active:before, .app-dialog__item-close:active:after {
+  background-color: red;
+}
+
+.app-header button:hover, .app-header button:focus, .app-header button:active {
+  background-color: #25a25a;
+  cursor: pointer;
+}
+
+.app-messages {
+  flex: 1;
+  height: 480px;
+  padding: 0px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  margin-top: 9px;
+  margin-bottom: 9px;
+}
+
+.app-messages .messages-list{
+  margin:0px; 
+  height: 470px;
+  padding: 1rem;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.app-messages .message {
+  display: flex;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 3px;
+  flex-basis: 100%;
+  background-color: #FFF;
+}
+
+.app-messages .message-selected, .app-messages .message-new, .app-messages .message-outgoing, .app-messages .message-incoming {
+  transition: all 250ms ease-in;
+}
+
+.app-messages .message-new {
+  border-left: 1em solid #2980b9;
+}
+
+.app-messages .message-selected {
+  background-color: lightgoldenrodyellow;
+}
+
+@media (min-width: 767px) {
+  .app-messages .message-outgoing {
+    margin-left: 7.5%;
+  }
+  .app-messages .message-incoming {
+    margin-right: 7.5%;
+  }
+}
+
+.app-messages .message-user {
+  text-align: center;
+  margin-right: 1rem;
+}
+
+.app-messages .message-user-avatar {
+  width: 64px;
+  margin-bottom: 0.5rem;
+}
+
+.app-messages .message-user-name {
+  color: #2980b9;
+  font-family: RobotoCondensed-Bold, sans-serif;
+}
+
+.app-messages .message-user a {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+}
+
+.app-messages .message-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.app-messages .message-content p {
+  margin-top: 0;
+}
+
+.app-messages .message-content time {
+  font-size: .85em;
+  color: grey;
+}
+
+.app-control-panel {
+  display: flex;
+  background-color: #FFF;
+}
+
+@media (min-width: 767px) {
+  .app-control-panel {
+    min-height: 128px;
+  }
+}
+
+.app-control-panel textarea {
+  flex-basis: 100%;
+  border: 1px solid #EEE;
+  resize: none;
+  padding: 0.5rem;
+  font-family: RobotoCondensed-Regular, sans-serif;
+  font-size: 1em;
+  color: #333;
+}
+
+.app-control-panel button {
+  width: 52px;
+  height: 52px;
+  margin-left: 1rem;
+  outline: none;
+  border: none;
+  border-radius: 3px;
+  background-color: #3498db;
+  color: #eee;
+  transition: 260ms ease-in;
+}
+
+.app-control-panel button img {
+  max-width: 25.6px;
+}
+
+.app-control-panel button:hover, .app-control-panel button:focus, .app-control-panel button:active {
+  background-color: #217dbb;
+  cursor: pointer;
+}
+
+.app-control-panel .buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header, .app-messages, .app-control-panel {
+  box-sizing: border-box;
+  border-radius: 3px;
+  padding: 1rem;
+}
+
+.app .users {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.app .users li {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  width: 40px;
+}
+
+.app .users li a img {
+  max-width: 100%;
+}
+
+.pull-right {
+  margin-left: auto;
+}
+
+.pull-left {
+  margin-right: auto;
+}
+
+@media screen and (min-width: 768px) {
+  .app-header button, .app-control-panel button {
+    width: 52px;
+    height: 52px;
+  }
+  .app-header {
+    min-height: 64px;
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  padding: 1rem;
+  animation-name: animateOpacity;
+  animation-duration: 300ms;
+}
+
+@keyframes animateOpacity {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

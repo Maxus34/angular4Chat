@@ -1,0 +1,50 @@
+<div class="app-header">
+    <button *ngIf="dialog" routerLink="/chat/{{dialog.id}}">
+        <img src="assets/img/icons/left-arrow.svg" alt="LeftArrowIcon">
+    </button>
+    <button *ngIf="!dialog" routerLink="/chat">
+        <img src="assets/img/icons/left-arrow.svg" alt="LeftArrowIcon">
+    </button>
+    
+    <div *ngIf="isLoadingDialog" class="dialog-loading"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>
+
+    <h2 *ngIf="dialog && !isLoadingDialog">Dialog "{{dialog.title}}" settings</h2>
+    <h2 *ngIf="!dialog && !isLoadingDialog">Creating a new dialog</h2>
+</div>
+
+<div *ngIf="changedDialog" class="form-group dialog-title">
+    <label>Title</label>
+    <input [(ngModel)]="changedDialog.title" class="form-control">
+</div>
+
+<div *ngIf="changedDialog" class="panel panel-primary">
+    <div class="panel-heading"><i>Current <strong>users</strong> in the dialog</i></div>
+    <div class="panel-body" *ngIf="changedDialog.dialogReferences">
+        <div *ngFor="let reference of changedDialog.dialogReferences" class="prop-item" [class.deleted]="!reference.isActive">
+            <div class="user" *ngIf="reference.user">
+                <img attr.src="http://192.168.33.10{{reference.user.pictureMiddle}}">
+            </div>
+            <div *ngIf="reference.user && reference.createdByUser" class="prop" >
+                <span>{{reference.user.username}}</span>
+                <p> Added by {{reference.createdByUser.username}} on {{reference.createdAt | date}}</p>
+
+                <div *ngIf="changedDialog.isCreator || reference.createdBy == currentUser.id">
+                    <a *ngIf="reference.isActive" (click)="deleteRef(reference)"  class="btn-delete"><i class="fa fa-times" aria-hidden="true"></i></a>
+                    <a *ngIf="!reference.isActive"  (click)="restoreRef(reference)" class="btn-restore"><i class="fa fa-undo"  aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-footer" >
+        <a (click)="addRef()" class="btn-sm btn-primary">Add user</a> &nbsp;
+        <select #usersSelect id="usersSelect">
+            <option *ngFor="let user of availableUsers" value={{user.id}} >{{user.username}}</option>
+        </select>
+
+        <div class="pull-right">
+                <a (click)="confirmChanges()" class="btn btn-sm btn-success">Confirm</a>
+                <a (click)="cancelChanges()" class="btn btn-sm btn-warning">Cancel</a>
+        </div>
+    </div>
+</div>

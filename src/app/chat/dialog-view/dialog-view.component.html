@@ -1,0 +1,48 @@
+<div class="app-header">
+    <button routerLink="/">
+          <img src="assets/img/icons/left-arrow.svg" alt="LeftArrowIcon">
+    </button>
+
+    <div *ngIf="isLoadingDialog" class="dialog-loading"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>
+
+    <ul *ngIf="!isLoadingDialog" class="users">
+        <li *ngFor="let user of dialog.dialogUsers">
+            <a href="#">
+                <img src="http://192.168.33.10{{user.pictureMiddle}}">
+            </a>
+        </li>
+    </ul>
+
+    <div *ngIf="!isLoadingDialog" class="pull-right">
+        <div *ngIf="selectedMessages.length >= 1" style="margin-right: 6px;">
+            <a class="btn btn-sm btn-warning" (click)="deleteSelectedMessages()">Delete messages ({{selectedMessages.length}})</a>
+            <a class="btn btn-sm btn-success" (click)="resetSelectedMessages()">Cancel</a>
+        </div>
+        <button routerLink="/chat/update/{{dialog.id}}" class="" id="btn-add">
+            <img src="assets/img/icons/gear.svg" alt="AddIcon">
+        </button>
+    </div>
+</div>
+
+<div class="app-messages">
+    <messages-list #messagesList
+        *ngIf="dialog" 
+        [(dialog)]="dialog" 
+        (onSelect)="onSelectMessage($event)">
+    </messages-list>
+ </div>
+
+ <div *ngIf="dialog" class="typing-users">
+    <typing-users [dialogId]="dialog.id"></typing-users>
+ </div>
+
+
+<div class="app-control-panel">
+   
+    <textarea #messageTextarea></textarea>
+    <div class="buttons">
+        <button (click)="sendMessage()">
+                <img src="/assets/img/icons/send.svg" alt="send">
+        </button>
+    </div>
+</div>

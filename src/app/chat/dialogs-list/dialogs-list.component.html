@@ -1,0 +1,23 @@
+<div>
+    <div class="app-header">
+        <button >
+          <img src="assets/img/icons/left-arrow.svg" alt="LeftArrowIcon">
+        </button>
+
+        <ul class="users">
+        </ul>
+
+        <button class="pull-right" id="btn-add" routerLink="/chat/create">
+          <img src="assets/img/icons/add.svg" alt="AddIcon">
+        </button>
+    </div>
+
+    <div  class="app-dialog">
+        <div *ngIf="isLoadingDialogsList" class="dialogs-loading" ><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>
+        <dialog-item 
+            *ngFor="let dialog of dialogs"
+            [dialog]="dialog" 
+            (onDeleted)="onDeleteDialog($event)">
+        </dialog-item>
+    </div>
+</div>

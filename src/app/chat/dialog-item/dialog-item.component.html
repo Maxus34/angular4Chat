@@ -1,0 +1,16 @@
+<div class="app-dialog__item"
+    (click)="goToTheDialogView()"
+    routerLink="/chat/{{dialog.id}}"
+    [class.deleted]="dialog.isDeleted">
+
+    <img class="app-dialog__item-img" src="" alt="Example">
+    <div class="app-dialog__item-content">
+      <h3>{{dialog.title}}</h3>
+      <div>
+            Users in dialog: {{dialog.dialogUsers.length}}
+      </div>
+    </div>
+    <span class="app-dialog__item-close"
+         (click)="deleteDialog($event); $event.stopPropagation();">
+    </span>
+</div>

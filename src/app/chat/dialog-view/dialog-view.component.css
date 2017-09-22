@@ -1,0 +1,13 @@
+.app-messages{
+  position: relative;
+}
+
+.dialog-loading{
+  margin: auto;
+  width: 60px;
+}
+
+.typing-users{
+  width: 100%;
+  height: 20px;
+}

@@ -1,0 +1,48 @@
+.dialog-properties{
+    display: block; 
+}
+.prop-item{
+    height: 100px;
+    width: 98%;
+    margin: 5px auto 5px auto;
+    display: flex;
+    flex-basis: 100%;
+    background-color: #DAE5FF;
+    border-radius: 10px;
+    position: relative;
+    transition: all 200ms ease-in;
+}
+.prop-item.deleted{
+    background-color: #FFE4E3;
+}
+.prop{
+    padding: 5px 5px 5px 20px;
+}
+.prop span{
+    font-weight: 700;
+    margin: 1px;
+}
+.prop p{
+    font-style: italic;
+}
+.user{
+    width: 100px;
+    padding: 10px;
+}
+.user img{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+.prop-item a{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+.app-header h2{
+    margin: auto;
+}
+.dialog-loading{
+    margin: auto;
+}

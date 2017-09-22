@@ -1,0 +1,27 @@
+<div class="message"
+     [attr.data-id]='message.id'
+     [attr.data-createdBy]='message.createdBy'
+     [attr.data-new]='message.isNew'
+
+     [class.message-outgoing]="currentUserId === message.createdBy"
+     [class.message-incoming]="currentUserId !== message.createdBy"
+     [class.message-new]="message.isNew"
+     [class.message-selected]="message.isSelected"
+     >
+        <div class="message-user">
+            <a href="#" *ngIf="message.user">
+                    <img class="message-user-avatar" attr.src="http://192.168.33.10{{message.user.pictureMiddle}}" >
+                    <span class="message-user-name">{{message.user.username}}</span>
+            </a>
+        </div>
+        <div class="message-content">
+            <p>{{message.content}}</p>
+            <time>
+                {{message.createdAt | date}}
+            </time>
+            <a  *ngIf="message.error"
+                class="message-error"><i class="fa fa-exclamation-triangle"></i></a>
+            <a *ngIf="message.isLoading"
+                class="message-loading"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></a>
+        </div>
+</div>
