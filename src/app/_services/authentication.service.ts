@@ -17,7 +17,7 @@ export class AuthenticationService {
     protected _currentUser :User;
 
     public events = {
-        onLogin : new Subject<User | boolean>(),
+        onLogin : new Subject<User>(),
         isAuth  : new Subject<boolean>()
     };
 
@@ -78,7 +78,7 @@ export class AuthenticationService {
 
         this.router.navigate(['/login']);
         this.events.isAuth.next(false);
-        this.events.onLogin.next(false);
+        this.events.onLogin.next();
         localStorage.removeItem('currentUser');
     }
     

@@ -1,5 +1,3 @@
-import { MessageItemComponent } from '../message-item/message-item.component';
-import { WsChatService } from '../../_services/ws.chat.service';
 import { Component, EventEmitter, ElementRef, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Location } from "@angular/common";
@@ -7,7 +5,10 @@ import { Location } from "@angular/common";
 import { Dialog, Message } from "../../_models/_models";
 import { AlertService, ApiService, ChatService, UserService } from "../../_services/_services";
 
+import { WsChatService } from '../../_services/ws.chat.service';
 import { DialogHelper } from "../../_helpers/dialog.helper";
+
+import { MessageItemComponent } from '../message-item/message-item.component';
 
 import 'rxjs/add/operator/switchMap';
 
@@ -182,9 +183,9 @@ export class MessagesListComponent implements OnInit{
             for (let i = elementsCount -1 ; i >= 0; i--){
                 let message :Message = elements[i].message;
                 
-                if (message.createdBy !== this.userService.currentUser.id){
+                if (message.createdBy !== this.userService.currentUser.id ){
                                     
-                    if (message.isNew && message.id){
+                    if (message.isNew && message.id && !message.isLoading) {
                         await this.dialogHelper.seeMessage(message);                  
                     }
                 

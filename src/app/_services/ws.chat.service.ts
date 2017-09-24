@@ -1,4 +1,3 @@
-import { Message } from '../_models/message';
 import { Injectable, OnInit } from '@angular/core';
 
 import * as io from 'socket.io';
@@ -7,10 +6,11 @@ import * as io_client from 'socket.io-client';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from "rxjs";
 
-import { Dialog, User } from "../_models/_models";
+import { Dialog, User, Message } from "../_models/_models";
 import { UserService } from './user.service';
-import { ApiService } from './api.service';
+import { AuthenticationService } from './authentication.service';
 
+import { WsMessageEventData, WsDialogEventData } from "../_models/ws-data.events";
 
 @Injectable()
 export class WsChatService {
@@ -23,69 +23,76 @@ export class WsChatService {
     public events = {
         userTyping: new Subject(),
         userOnline: new Subject(),
-        messageCreated: new Subject(),
-        messageUpdated: new Subject(),
-        dialogCreated: new Subject(), 
-        dialogUpdated: new Subject(), 
+        messageCreated: new Subject<WsMessageEventData>(),
+        messageUpdated: new Subject<WsMessageEventData>(),
+        dialogCreated: new Subject<WsDialogEventData>(), 
+        dialogUpdated: new Subject<WsDialogEventData>(), 
     };
 
     public constructor(
         private userService: UserService,
+        private authentivationService :AuthenticationService,
     ) {
-        this.connectWebSocket();
-        this.subcsribeOnSocketEvents();
+        this.authentivationService.events.onLogin
+            .subscribe( (user :User) => {
+                if (user){
+                    this.connectWebSocket(user.accessToken);
+                    this.subcsribeOnSocketEvents();
+                } else {
+                    this.disconnectWebSocket();
+                }
+            });
     }
 
     public emitEvent(event :string, message :string){
-        console.log(`Emit ${event} ${message}`);
         this.socket.emit(event, message);
     }
     
     protected subcsribeOnSocketEvents(){
 
-        this.socket.on('user.typing', (evt :any) => {
+        this.socket.on('user.typing', (evt :string) => {
             try{ evt = JSON.parse(evt);}
             catch(e) { console.log(e); }
 
             this.events.userTyping.next(evt);
         });
 
-        this.socket.on('message.created', (evt :any) => {
-            try{ evt = JSON.parse(evt);}
+        this.socket.on('message.created', (evt :string) => {
+            try{ var event = JSON.parse(evt); }
             catch(e) { console.log(e); }
 
-            this.events.messageCreated.next(evt);
+            this.events.messageCreated.next(event);
         });
 
-        this.socket.on('message.updated', (evt :any) => {
-            try{ evt = JSON.parse(evt);}
+        this.socket.on('message.updated', (evt :string) => {
+            try{ var event = JSON.parse(evt);}
             catch(e) { console.log(e); }
 
-            this.events.messageUpdated.next(evt);
+            this.events.messageUpdated.next(event);
         });
         
-        this.socket.on('dialog.created', (evt: any) => {
-            try{ evt = JSON.parse(evt);}
+        this.socket.on('dialog.created', (evt :string) => {
+            try{ var event = JSON.parse(evt); }
             catch(e) { console.log(e); }
-
-            this.events.dialogCreated.next(evt);
+        
+            this.events.dialogCreated.next(event);
         });
 
-        this.socket.on('dialog.created', (evt: any) => {
-            try{ evt = JSON.parse(evt);}
+        this.socket.on('dialog.updated', (evt :string) => {
+            try{ var event = JSON.parse(evt);}
             catch(e) { console.log(e); }
 
-            this.events.dialogUpdated.next(evt);
+            this.events.dialogUpdated.next(event);
         });
     }
 
-    private connectWebSocket() {
+    private connectWebSocket(access_token) {
         console.log(`Getting an connection on ${this.socketPath}${this.socketPort}...`);
         
         try{
             this.socket = io_client.connect(`localhost:3000`, {
                 query: {
-                    access_token: this.userService.currentUser.accessToken
+                    access_token: access_token
                 },
                 transports: ['websocket']
             });
@@ -97,5 +104,20 @@ export class WsChatService {
         })
         
         this.socket.on('connect', () => { console.log('Socket connection success!\n\n'); })
+    }
+
+    private disconnectWebSocket(){
+        this.socket.disconnect();
+    }
+
+
+    private handleSocketErrors(){
+        this.socket.on('connect_error', (error) => {
+            // ...
+        });
+
+        this.socket.on('connect_timeout', (timeout) => {
+            // ...
+        });
     }
 }

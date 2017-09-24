@@ -17,8 +17,6 @@ export class DialogHelper {
 
     public currentDialog :Dialog;
     
-    // Сделать имитацию работы DialogRepository
-    // Рендерить только сообщения из messagesToRender, 
     public messagesToRender :Message[];
 
     constructor (
@@ -46,6 +44,7 @@ export class DialogHelper {
     }
     
     protected subscribeOnWsEvents(){
+        
         this.wsChatService.events.messageCreated
             .subscribe( async (event :any) => {
                 let dialogId = event.dialogId;
@@ -64,7 +63,6 @@ export class DialogHelper {
                 }                
             });
     }
-
 
 
     // ------------- WS Events Handlers ----------------------
@@ -88,17 +86,21 @@ export class DialogHelper {
 
     // ------------- WS EventEmitters ------------------------
     public async seeMessage(message :Message){
-        if (!message.isNew)
+        if (!message.isNew || message.isLoading)
             return;
         
+           message.isLoading = true;
+
         this.apiService.apiPOST('messages.see', {dialogId: this.dialog.id, messageId: message.id}).toPromise()
             .then( (response) => {
                 if (response.item){
                     message.isNew = false;
                 }
+                message.isLoading = false;
             })
             .catch( (error) => {
                 console.log(error); 
+                message.isLoading = false;
             });
     }
     // -------------------------------------------------------
@@ -194,6 +196,9 @@ export class DialogHelper {
     }
 
     public async updateDialog(title, users = []){
+        if (!this.currentDialog.isActive)
+            return;
+
         let response = await this.apiService.apiPOST('dialogs.update', { id: this.dialog.id, users, title}).toPromise();
 
         if (response.result) {

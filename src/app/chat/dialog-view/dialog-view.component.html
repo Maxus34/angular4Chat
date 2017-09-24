@@ -18,19 +18,25 @@
             <a class="btn btn-sm btn-warning" (click)="deleteSelectedMessages()">Delete messages ({{selectedMessages.length}})</a>
             <a class="btn btn-sm btn-success" (click)="resetSelectedMessages()">Cancel</a>
         </div>
-        <button routerLink="/chat/update/{{dialog.id}}" class="" id="btn-add">
+        <button [disabled]="dialog && !dialog.isActive" routerLink="/chat/update/{{dialog.id}}" class="" id="btn-add">
             <img src="assets/img/icons/gear.svg" alt="AddIcon">
         </button>
     </div>
 </div>
 
 <div class="app-messages">
+
+    <div *ngIf="dialog && !dialog.isActive" class='message-excluded'>
+        <span>You were excluded from this dialog</span>
+        <p>You can only view chat history</p>
+    </div>
+
     <messages-list #messagesList
         *ngIf="dialog" 
         [(dialog)]="dialog" 
         (onSelect)="onSelectMessage($event)">
     </messages-list>
- </div>
+</div>
 
  <div *ngIf="dialog" class="typing-users">
     <typing-users [dialogId]="dialog.id"></typing-users>

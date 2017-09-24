@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from "rxjs";
 
-import { Dialog, User } from "../_models/_models";
+import { Dialog, User, Message } from "../_models/_models";
 import { ApiService } from '../_services/api.service';
 import { UserService } from "../_services/user.service";
 
@@ -16,39 +16,70 @@ export class DialogFactory {
         private apiService  :ApiService,
     ) { }
 
+    
     public async getDialogFromData(data :any) :Promise<Dialog> {
         let dialog = new Dialog();
 
-        dialog.id = data.id;
-        dialog.title = data.title;
-        dialog.isCreator = data.isCreator;
-        dialog.isActive = data.isActive;
+        dialog.id        = data.id;
+        dialog.title     = data.title;
         dialog.creatorId = data.creatorId;
-
-        dialog.dialogUsers = [];
-        dialog.messages = [];
+        
+        dialog.isCreator = (data.creatorId == this.userService.currentUser.id) ? true : false;
 
         dialog.dialogReferences = data.dialogReferences;
 
-        for (let i = 0; i < data.dialogReferences.length; i++) {
-            let user = await this.userService.getById(data.dialogReferences[i].userId);
+        dialog.dialogUsers = new Array<User>();
+        dialog.messages    = new Array<Message>();
+        
+        let referenceForCurrentUserIndex :number;
 
-            dialog.dialogUsers.push(user);
+        for (let i = 0; i < dialog.dialogReferences.length; i++) {
+            
+            // Checking reference for current user;
+            if (dialog.dialogReferences[i].userId == this.userService.currentUser.id){
+                dialog.isActive = dialog.dialogReferences[i].isActive;
+                referenceForCurrentUserIndex = i;    
+            } else 
+
+            // Checking othe references;
+            if (dialog.dialogReferences[i].isActive){
+                let user = await this.userService.getById(dialog.dialogReferences[i].userId);
+                
+                dialog.dialogUsers.push(user);
+            }
         }
+
+        dialog.dialogReferences.splice(referenceForCurrentUserIndex, 1);
 
         return dialog;
     }
 
+
     public async updateDialogFromData(dialog :Dialog, data :any) :Promise<any> {
 
         dialog.title       = data.title;
-        dialog.isActive    = data.isActive;
         dialog.dialogUsers = [];
         
-        for (let i = 0; i < data.dialogReferences.length; i++){
-            let user = await this.userService.getById(data.dialogReferences[i].userId);
+        dialog.dialogReferences = data.dialogReferences;
 
-            dialog.dialogUsers.push(user);
+        let referenceForCurrentUserIndex :number;
+
+        for (let i = 0; i < dialog.dialogReferences.length; i++) {
+            
+            // Checking reference for current user;
+            if (dialog.dialogReferences[i].userId == this.userService.currentUser.id){
+                dialog.isActive = dialog.dialogReferences[i].isActive;
+                referenceForCurrentUserIndex = i;    
+            } else 
+
+            // Checking othe references;
+            if (dialog.dialogReferences[i].isActive){
+                let user = await this.userService.getById(dialog.dialogReferences[i].userId);
+                
+                dialog.dialogUsers.push(user);
+            }
         }
+        
+        dialog.dialogReferences.splice(referenceForCurrentUserIndex, 1);
     }
 }

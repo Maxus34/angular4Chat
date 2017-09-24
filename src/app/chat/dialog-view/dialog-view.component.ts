@@ -69,15 +69,20 @@ export class DialogViewComponent implements OnInit{
             })
             .debounceTime(200)
             .subscribe( (event :any) => {
-               this.wsChatService.emitEvent('typing', JSON.stringify({
-                    dialogID : this.dialog.id,
-                    userID : this.userService.currentUser.id
+               this.wsChatService.emitEvent('user.typing', JSON.stringify({
+                    dialogId : this.dialog.id,
+                    userId : this.userService.currentUser.id
                }));
             });
     }
     
 
     public async  sendMessage(){
+        if (!this.dialog.isActive){
+            this.alertService.error("You cannot send messages in this dialog!");
+            return;
+        }
+
         let content = this.textArea.nativeElement.value;
         
         if (!content)

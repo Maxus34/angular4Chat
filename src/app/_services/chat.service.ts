@@ -1,3 +1,4 @@
+import { AuthenticationService } from './authentication.service';
 import { WsChatService } from './ws.chat.service';
 import { Injectable, OnInit } from '@angular/core';
 
@@ -5,6 +6,8 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from "rxjs";
  
 import { Dialog, User } from "../_models/_models";
+import { WsDialogEventData, WsMessageEventData} from "../_models/ws-data.events";
+
 import { UserService } from './user.service';
 import { ApiService } from './api.service';
 
@@ -12,31 +15,64 @@ import { DialogHelper } from '../_helpers/dialog.helper';
 import { DialogFactory, MessageFactory } from '../_factories/_factories';
 
 @Injectable()
-export class ChatService implements OnInit{
+export class ChatService{
     
     private dialogsList :Dialog[];
 
     private _dialogHelpers :DialogHelper[] = [];
 
     constructor (
+        private authService :AuthenticationService,
         private apiService :ApiService,
         private userService :UserService,
         private wsChatService :WsChatService,
         private dialogFactory :DialogFactory,
         private messageFactory :MessageFactory,
-    ) { }
+    ) { 
+        this.subsctibeOnWsEvents();
 
-    ngOnInit(){
+        this.authService.events.onLogin
+            .subscribe( (user) => {
+                if (user) {
+                    this.dialogsList = undefined;
+                    this._dialogHelpers = [];
+                }
+            })
+     }
+
+    
+     protected subsctibeOnWsEvents () {
         this.wsChatService.events.dialogCreated
-            .subscribe( (event :any) => {
-
+            .subscribe( (event :WsDialogEventData) => {
+                this.handleDialogCreated(event);
             });
-        this.wsChatService.events.dialogUpdated
-            .subscribe( (event :any) => {
 
+        this.wsChatService.events.dialogUpdated
+            .subscribe( (event :WsDialogEventData) => {
+                console.log(`Got event DialogUpdated`, event);
+                this.handleDialogUpdated(event);
             });
     }
    
+    // ------------- WS Events Handlers ----------------------
+    protected async handleDialogCreated(event :WsDialogEventData){
+        let dialog = await this.dialogFactory.getDialogFromData(event.item);
+        this.dialogsList.push(dialog);
+    }    
+
+    protected async handleDialogUpdated(event :WsDialogEventData){
+        
+        let dialogUpdated = this.dialogsList.find((dialog) => {
+            return dialog.id == event.item.id;
+        });
+
+        if (dialogUpdated) {
+            this.dialogFactory.updateDialogFromData(dialogUpdated, event.item);
+        }
+    }
+    // -------------------------------------------------------
+
+
     async getDialogsList () { 
         if (this.dialogsList == undefined){
             let response;
@@ -48,7 +84,7 @@ export class ChatService implements OnInit{
             this.dialogsList = [];
                     
             for (let i = 0; i < response.items.length; i++){
-                this.dialogsList.push(await this.getDialogFromData( response.items[i]));
+                this.dialogsList.push(await this.dialogFactory.getDialogFromData( response.items[i]));
             }
         }
             
@@ -60,6 +96,7 @@ export class ChatService implements OnInit{
         return this.apiService.apiPOST('dialogs.get', {})
             .toPromise();
     }
+
 
     async getDialogHelper(id :number) :Promise<DialogHelper>{
         
@@ -101,26 +138,4 @@ export class ChatService implements OnInit{
         }
     }
 
-    public async getDialogFromData(data) :Promise<Dialog>{
-        let dialog = new Dialog();
-
-        dialog.id        = data.id;
-        dialog.title     = data.title ;
-        dialog.isCreator = data.isCreator;
-        dialog.isActive  = data.isActive;
-        dialog.creatorId = data.creatorId;
-
-        dialog.dialogUsers = [];
-        dialog.messages = [];
-        
-        dialog.dialogReferences = data.dialogReferences;
-        
-        for (let i = 0; i < data.dialogReferences.length; i++){
-            let user = await this.userService.getById(data.dialogReferences[i].userId);
-
-            dialog.dialogUsers.push(user);
-        }
-
-        return dialog;
-    }
 }

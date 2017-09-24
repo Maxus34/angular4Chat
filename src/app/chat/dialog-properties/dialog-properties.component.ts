@@ -55,6 +55,7 @@ export class DialogPropertiesComponent implements OnInit {
 
         } else {
             this.changedDialog = new Dialog();
+            this.changedDialog.isCreator = true;
             await this.loadAvailableUsers();
         }
 
@@ -95,6 +96,7 @@ export class DialogPropertiesComponent implements OnInit {
         this.changedDialog.dialogReferences.push({
             userId: userToAdd.id,
             user: userToAdd,
+            cratedBy: this.currentUser.id,
             createdByUser: this.currentUser,
             createdAt: new Date(),
             isActive: 1,
@@ -135,6 +137,7 @@ export class DialogPropertiesComponent implements OnInit {
             return res;
         })
     }
+
 
     protected async updateDialog() {
         let users = [];
