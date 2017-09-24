@@ -12,5 +12,5 @@ export class Dialog {
     public dialogUsers      :User[] = []; 
 
     public isDeleted ?:boolean = false;
-    public messages  ?: Message[]   = [];
+    public messages  ?: Message[] = [];
 }

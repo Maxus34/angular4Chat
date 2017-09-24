@@ -45,7 +45,7 @@ export class MessagesListComponent implements OnInit{
     ) {}   
     
 
-    async ngOnInit(){
+    public async ngOnInit(){
         try{
             this.dialogHelper = await this.chatService.getDialogHelper(this.dialog.id);
         } catch (e) { this.alertService.error(e); return;}   
@@ -60,7 +60,7 @@ export class MessagesListComponent implements OnInit{
     }
 
 
-    async ngAfterViewInit(){
+    public async ngAfterViewInit(){
         this.viewMessages.changes.subscribe( this.handleMessageContainerChanges() );
         this.viewMessages.changes.subscribe( this.handleNewMessagesOnMessageListChanges() );
 

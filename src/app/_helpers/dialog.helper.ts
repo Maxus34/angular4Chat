@@ -108,11 +108,12 @@ export class DialogHelper {
 
 
     // --------- Methods for dialog handling -----------------
-    public async loadMessages(){
+    
+    public async loadMessages(count :number = 10){
         let response;
 
         try{
-            response = await this.apiService.apiPOST('messages.get', {dialogId: this.currentDialog.id}).toPromise();
+            response = await this.apiService.apiPOST('messages.get', {dialogId: this.currentDialog.id, offset: -count}).toPromise();
         } catch (e) {console.log(e);}
 
         this.currentDialog.messages = [];

@@ -35,7 +35,7 @@ body {
   height: 34.66667px;
   border: none;
   border-radius: 100%;
-  background-color: #2ecc71;
+  background-color: #555;
   transition: 260ms ease-in;
 }
 
@@ -241,9 +241,9 @@ body {
 
 .app-dialog__item-img {
   float: left;
-  padding-right: 1rem;
-  padding-left: 1rem;
-  width: 64px;
+  display: flex;
+  padding: 2px;
+  width: 85px;
   max-width: 100%;
   border-right: 1px solid #eee;
 }
@@ -254,6 +254,7 @@ body {
   justify-content: space-around;
   flex: 1;
   padding: 1rem;
+  padding-right: 30px;
 }
 
 .app-dialog__item-close {
@@ -294,7 +295,7 @@ body {
 }
 
 .app-header button:hover, .app-header button:focus, .app-header button:active {
-  background-color: #25a25a;
+  background-color: #333;
   cursor: pointer;
 }
 

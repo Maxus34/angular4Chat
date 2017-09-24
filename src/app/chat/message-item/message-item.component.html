@@ -17,7 +17,7 @@
         <div class="message-content">
             <p>{{message.content}}</p>
             <time>
-                {{message.createdAt | date}}
+                {{message.createdAt * 1000 | date:"d MMM. HH:MM"}}
             </time>
             <a  *ngIf="message.error"
                 class="message-error"><i class="fa fa-exclamation-triangle"></i></a>

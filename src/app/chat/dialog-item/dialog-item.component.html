@@ -1,14 +1,26 @@
 <div class="app-dialog__item"
     (click)="goToTheDialogView()"
     routerLink="/chat/{{dialog.id}}"
-    [class.deleted]="dialog.isDeleted">
+    [class.deleted]="dialog.isDeleted"
+    [class.new]="dialog.messages.length > 0 && dialog.messages[dialog.messages.length-1].isNew"> 
 
-    <img class="app-dialog__item-img" src="" alt="Example">
+    <div class="app-dialog__item-img">
+        <div *ngFor="let user of dialog.dialogUsers; let i = index;">
+            <img *ngIf="i < 4" attr.src="http://192.168.33.10{{user.pictureMiddle}}" [class.small]="dialog.dialogUsers.length > 1">
+        </div>
+    </div>
+
     <div class="app-dialog__item-content">
-      <h3>{{dialog.title}}</h3>
-      <div>
-            Users in dialog: {{dialog.dialogUsers.length}}
+
+      <div class="header">
+        <div class="dialog-title">{{dialog.title}}</div>  
       </div>
+
+      <div *ngIf="dialog.messages.length > 0" class="last-message" [class.new]="dialog.messages.length > 0 && dialog.messages[dialog.messages.length-1].isNew">
+           <img attr.src="http://192.168.33.10{{dialog.messages[dialog.messages.length-1].user.pictureMiddle}}" alt="user-avatar"> 
+           <div>{{dialog.messages[dialog.messages.length-1].content}}</div>
+      </div>
+
     </div>
     <span class="app-dialog__item-close"
          (click)="deleteDialog($event); $event.stopPropagation();">
