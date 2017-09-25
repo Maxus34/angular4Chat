@@ -10,7 +10,7 @@ import { Dialog } from '../../_models/_models';
 export class DialogItemComponent implements OnInit {
     @Input() dialog :Dialog;
     
-    @Output() onDeleted = new EventEmitter<number>(true);
+    @Output() onDeleted = new EventEmitter<number>();
 
     constructor (
         private router :Router,

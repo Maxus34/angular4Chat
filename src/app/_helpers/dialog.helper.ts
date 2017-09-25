@@ -67,6 +67,11 @@ export class DialogHelper {
 
     // ------------- WS Events Handlers ----------------------
     protected async handleNewMessage(messageData :any){
+        if (!messageData){
+            console.log(`WHAT`, messageData);
+            return;
+        }
+
         let message = await this.messageFactory.getMessageFromData(messageData);
 
         this.currentDialog.messages.push(message);
@@ -89,18 +94,18 @@ export class DialogHelper {
         if (!message.isNew || message.isLoading)
             return;
         
-           message.isLoading = true;
+           setTimeout( () => message.isLoading = true, 0);
 
         this.apiService.apiPOST('messages.see', {dialogId: this.dialog.id, messageId: message.id}).toPromise()
             .then( (response) => {
                 if (response.item){
                     message.isNew = false;
                 }
-                message.isLoading = false;
+                setTimeout( () => message.isLoading = false, 0);
             })
             .catch( (error) => {
                 console.log(error); 
-                message.isLoading = false;
+                setTimeout( () => message.isLoading = false, 0);
             });
     }
     // -------------------------------------------------------

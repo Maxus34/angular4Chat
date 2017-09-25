@@ -17,8 +17,6 @@ export class DialogsListComponent implements OnInit{
     
     public isLoadingDialogsList = false;
     public dialogs :Dialog[];
-    
-    @ViewChildren('dialogs') private viewDialogs:QueryList<DialogItemComponent>;
 
     public constructor (
         private chatService :ChatService,
@@ -31,14 +29,8 @@ export class DialogsListComponent implements OnInit{
         this.loadDialogsList();
     }
 
-    public async ngAfterViewInit(){
-        this.wsChatService.events.messageCreated.subscribe( (event :any) => {
-            console.log(event);
-            this.sortDialogsListByLastMessageTimestamp();
-        });
-    }
-
     public onDeleteDialog (id :number){
+        this.chatService.deleteDialog(id);
     }
     
     protected loadDialogsList () {
@@ -47,49 +39,10 @@ export class DialogsListComponent implements OnInit{
        this.chatService.getDialogsList()
            .then( async dialogs => {
                 this.dialogs = dialogs;
-                await this.loadLastMessageForEveryDialog();
-                this.sortDialogsListByLastMessageTimestamp();
                 this.isLoadingDialogsList = false;
             })    
             .catch( err => {
                 this.isLoadingDialogsList = false;
             });
-    }
-
-    protected async loadLastMessageForEveryDialog(){
-
-        let dialogsCount = this.dialogs.length;
-        let promisesArray = [];
-
-        for (let i = 0; i < dialogsCount; i++){     
-            let dialogHelper = await this.chatService.getDialogHelper(this.dialogs[i].id);     
-
-            promisesArray.push(
-                dialogHelper.loadMessages(1)
-                .then( () => {
-                    console.log(this.dialogs[i]);
-                })
-            );
-        }
-        
-        await Promise.all(promisesArray);
-    }
-
-    protected sortDialogsListByLastMessageTimestamp(){
-
-        this.dialogs.sort( (a, b) => {
-            
-            if (a.messages.length > 0 && b.messages.length > 0){
-                
-                if (a.messages[a.messages.length - 1].createdAt > b.messages[b.messages.length - 1].createdAt){
-                    return -1;
-                } else {
-                    return 1;
-                }
-
-            } else {
-                return 0;
-            }
-        });
     }
 } 

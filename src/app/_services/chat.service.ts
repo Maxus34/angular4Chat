@@ -18,6 +18,7 @@ import { DialogFactory, MessageFactory } from '../_factories/_factories';
 export class ChatService{
     
     private dialogsList :Dialog[];
+    private dialogsListHasBeenLoaded :boolean = false;
 
     private _dialogHelpers :DialogHelper[] = [];
 
@@ -27,21 +28,22 @@ export class ChatService{
         private userService :UserService,
         private wsChatService :WsChatService,
         private dialogFactory :DialogFactory,
-        private messageFactory :MessageFactory,
-    ) { 
+        private messageFactory :MessageFactory, )
+    { 
         this.subsctibeOnWsEvents();
-
+        
         this.authService.events.onLogin
             .subscribe( (user) => {
                 if (user) {
-                    this.dialogsList = undefined;
+                    this.dialogsList = [];
                     this._dialogHelpers = [];
+                    this.dialogsListHasBeenLoaded = false;
                 }
             })
-     }
+    }
 
     
-     protected subsctibeOnWsEvents () {
+    protected subsctibeOnWsEvents () {
         this.wsChatService.events.dialogCreated
             .subscribe( (event :WsDialogEventData) => {
                 this.handleDialogCreated(event);
@@ -52,12 +54,19 @@ export class ChatService{
                 console.log(`Got event DialogUpdated`, event);
                 this.handleDialogUpdated(event);
             });
+
+        this.wsChatService.events.messageCreated
+            .subscribe( (event :any) => {
+                console.log(`ChatService: message.created! -> sort`);
+                setTimeout( () => this.sortDialogsListByLastMessageTimestamp(), 50);
+            });
     }
    
     // ------------- WS Events Handlers ----------------------
     protected async handleDialogCreated(event :WsDialogEventData){
         let dialog = await this.dialogFactory.getDialogFromData(event.item);
         this.dialogsList.push(dialog);
+        this.getDialogHelper(dialog.id);
     }    
 
     protected async handleDialogUpdated(event :WsDialogEventData){
@@ -73,35 +82,23 @@ export class ChatService{
     // -------------------------------------------------------
 
 
-    async getDialogsList () { 
-        if (this.dialogsList == undefined){
-            let response;
+    public async getDialogsList () { 
+      
+        await this.loadDialogsList();
+        
+        this.dialogsList.forEach( dialog => {
+            this.getDialogHelper(dialog.id);
+        });
+        
+        this.sortDialogsListByLastMessageTimestamp();
 
-            try{
-                response = await this.apiService.apiPOST('dialogs.get', {}).toPromise()
-            } catch (err) { console.log(err); }
-                
-            this.dialogsList = [];
-                    
-            for (let i = 0; i < response.items.length; i++){
-                this.dialogsList.push(await this.dialogFactory.getDialogFromData( response.items[i]));
-            }
-        }
-            
         return this.dialogsList;
     }
     
-
-    deleteDialog(id :number) :Promise<any>{
-        return this.apiService.apiPOST('dialogs.get', {})
-            .toPromise();
-    }
-
-
-    async getDialogHelper(id :number) :Promise<DialogHelper>{
+    public async getDialogHelper(id :number) :Promise<DialogHelper>{
         
         // Waiting while dialogs list will be loaded
-        await this.getDialogsList();
+        await this.loadDialogsList();
         
         // Searching for dialog
         let dialog = this.dialogsList.find( (dialog) => {
@@ -122,6 +119,45 @@ export class ChatService{
         return dialogHelper;
     }
 
+    
+    // --------------- API Calls -----------------------------
+    public async deleteDialog(id :number) :Promise<any>{
+        return this.apiService.apiPOST('dialogs.delete', {
+            id: id
+        })
+        .map( (res) => {
+            if (res.result == 'success'){
+                let dialogId = this.dialogsList.findIndex( (dialog) => {
+                    return dialog.id == id;
+                });
+
+                if(dialogId){
+                    console.log(`Deleting ${dialogId}`);
+                    this.dialogsList.splice(dialogId, 1);
+                }
+            } else{
+                console.log(res);
+            }
+        })
+        .toPromise();
+    }
+    
+    public async loadDialogsList() :Promise<any>{
+        if (!this.dialogsListHasBeenLoaded){
+
+            try{
+                var response = await this.apiService.apiPOST('dialogs.get', {withLastMessage : true}).toPromise();
+             } catch (err) { console.log(err); }
+                 
+             this.dialogsList = [];
+                     
+             for (let i = 0; i < response.items.length; i++){
+                 this.dialogsList.push(await this.dialogFactory.getDialogFromData( response.items[i]));
+             }
+             
+             this.dialogsListHasBeenLoaded = true;
+        } 
+    }
 
     public async createDialog(title, users = []){
         let response = await this.apiService.apiPOST('dialogs.create', { title, users })
@@ -137,5 +173,32 @@ export class ChatService{
             
         }
     }
+    // -------------------------------------------------------
+    
 
+    protected sortDialogsListByLastMessageTimestamp(){
+        
+        console.log(`Sort!`);
+
+        this.dialogsList.sort( (a, b) => {
+            
+            if (a.messages.length <= 0 && b.messages.length > 0)
+                return 1;
+
+            if (b.messages.length <= 0 && a.messages.length > 0)
+                return -1;          
+
+            if (a.messages.length > 0 && b.messages.length > 0){
+                        
+                if (a.messages[a.messages.length - 1].createdAt > b.messages[b.messages.length - 1].createdAt){
+                    return -1;
+                } else {
+                    return 1;
+                }
+        
+            } else {
+                return 0;
+            }
+        });
+    }
 }

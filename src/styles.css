@@ -253,7 +253,7 @@ body {
   flex-direction: column;
   justify-content: space-around;
   flex: 1;
-  padding: 1rem;
+  padding: 0.5rem;
   padding-right: 30px;
 }
 

@@ -35,6 +35,8 @@ export class WsChatService {
     ) {
         this.authentivationService.events.onLogin
             .subscribe( (user :User) => {
+                console.log(`OnLogin emited!`);
+
                 if (user){
                     this.connectWebSocket(user.accessToken);
                     this.subcsribeOnSocketEvents();

@@ -1,3 +1,4 @@
+import { MessageFactory } from './message.factory';
 import { Injectable } from '@angular/core';
 
 import { Subject } from 'rxjs/Subject';
@@ -14,6 +15,7 @@ export class DialogFactory {
     constructor(
         private userService :UserService,
         private apiService  :ApiService,
+        private messageFactory :MessageFactory,
     ) { }
 
     
@@ -50,6 +52,10 @@ export class DialogFactory {
         }
 
         dialog.dialogReferences.splice(referenceForCurrentUserIndex, 1);
+        
+        if (data.lastMessage){
+            dialog.messages.push(await this.messageFactory.getMessageFromData(data.lastMessage));
+        }
 
         return dialog;
     }
