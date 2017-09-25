@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
             this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
         }
         
-        
+        // Реазиция canActivate с помощью Observable. Что - то пошло не так.
         /*return this.authService.events.isAuth
             .map( (isAuth :boolean) => {
                 

@@ -25,9 +25,6 @@ export class ApiService {
 
         this.authService.events.onLogin
             .subscribe( (user : User) => {
-                
-                console.log(`Api Service got `, user);
-
                 if (user){
                     this.accessToken = user.accessToken;
                 } 

@@ -32,11 +32,5 @@ export class NavigationComponent implements OnInit{
     }
 
     public ngOnInit(){
-        /*
-       this.router.events.subscribe( (event :any) => {
-            if (event instanceof NavigationEnd){
-                console.log(event);
-            }
-       })*/
     }
 }

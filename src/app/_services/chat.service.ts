@@ -51,13 +51,11 @@ export class ChatService{
 
         this.wsChatService.events.dialogUpdated
             .subscribe( (event :WsDialogEventData) => {
-                console.log(`Got event DialogUpdated`, event);
                 this.handleDialogUpdated(event);
             });
 
         this.wsChatService.events.messageCreated
             .subscribe( (event :any) => {
-                console.log(`ChatService: message.created! -> sort`);
                 setTimeout( () => this.sortDialogsListByLastMessageTimestamp(), 50);
             });
     }
@@ -178,8 +176,6 @@ export class ChatService{
 
     protected sortDialogsListByLastMessageTimestamp(){
         
-        console.log(`Sort!`);
-
         this.dialogsList.sort( (a, b) => {
             
             if (a.messages.length <= 0 && b.messages.length > 0)

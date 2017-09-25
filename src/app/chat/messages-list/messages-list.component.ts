@@ -143,7 +143,6 @@ export class MessagesListComponent implements OnInit{
                 
                 // If message is outgoing need to scroll messageContainer to bootom;
                 if (event.last.message.createdBy == this.userService.currentUser.id){
-                    console.log(`MessageContainerTest 1`)
                     this.scrollMessageContainerToBottom();
                     return;
                 }
@@ -153,7 +152,6 @@ export class MessagesListComponent implements OnInit{
                 // else => shows bottomScrollingButton
             
                 if ( (messageContainerElem.scrollHeight - messageContainerElem.clientHeight - messageContainerElem.scrollTop) < bottomScrollingValueWhenNotScrolling){
-                    console.log(`MessageContainerTest 2`);;
                     this.scrollMessageContainerToBottom();
                 }
 

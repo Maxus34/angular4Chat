@@ -74,8 +74,6 @@ export class AuthenticationService {
 
 
     public logout () {
-        console.log(`logout`);
-
         this.router.navigate(['/login']);
         this.events.isAuth.next(false);
         this.events.onLogin.next();

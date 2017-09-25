@@ -38,8 +38,6 @@ export class ErrorHandlerComponent {
     public constructor(private errorHandlerService :ErrorHandlerService){
         
         this.errorHandlerService.onError.subscribe( (err) => {
-            console.log(`error handler component got`, err);
-
             this.error = err;
         });
 

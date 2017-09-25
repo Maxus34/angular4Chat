@@ -67,10 +67,8 @@ export class DialogHelper {
 
     // ------------- WS Events Handlers ----------------------
     protected async handleNewMessage(messageData :any){
-        if (!messageData){
-            console.log(`WHAT`, messageData);
-            return;
-        }
+        if (!messageData)
+          return;
 
         let message = await this.messageFactory.getMessageFromData(messageData);
 
