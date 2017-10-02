@@ -1,4 +1,8 @@
+import { OverlayHostComponent } from './_directives/overlay/overlay-host.component';
+import { OverlayService } from './_directives/overlay/overlay.service';
 import { Component, OnInit } from '@angular/core';
+
+import { ImgPopupComponent } from "./chat/img-popup/img-popup.component";
 
 @Component({
   selector: 'app-root',
@@ -6,10 +10,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit{
-  public title :string = 'app';
   
+  public constructor(
+    private overlayService :OverlayService
+  ){}
+  
+
   public ngOnInit(){
     this.handlePageResizing();
+
+    setTimeout( () => this.overlayService.openInPopup(ImgPopupComponent, {
+      src: "http://positime.ru/wp-content/uploads/2016/12/full-maxresdefault-1472485492.jpg",
+      title: "Dratyti"
+    }), 1000);
   }
 
   private handlePageResizing(){

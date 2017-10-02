@@ -5,6 +5,7 @@ import { AfterViewChecked, Component, ElementRef } from '@angular/core';
     selector: 'tooltip-container',
     template: `{{content}}`,
     styles: [`
+        
     `]
 })
 export class TooltipContainerComponent implements AfterViewChecked{

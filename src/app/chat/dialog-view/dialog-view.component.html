@@ -7,7 +7,7 @@
 
     <ul *ngIf="!isLoadingDialog" class="users">
         <li *ngFor="let user of dialog.dialogUsers">
-            <a href="#">
+            <a href="#" tooltip="{{user.username}}">
                 <img src="http://192.168.33.10{{user.pictureMiddle}}">
             </a>
         </li>

@@ -1,7 +1,7 @@
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule }      from '@angular/core';
+import { Router }           from '@angular/router';
+import { FormsModule }      from '@angular/forms';
+import { BrowserModule }    from '@angular/platform-browser';
+import { NgModule }         from '@angular/core';
 
 import { Http, HttpModule } from '@angular/http';
 
@@ -29,13 +29,24 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/observable/throw';
 
+//Tooltip
+import { TooltipModule } from "ngx-tooltip";
+
+//Overlay
+import { OverlayHostComponent } from "./_directives/overlay/overlay-host.component";
+import { OverlayService } from "./_directives/overlay/overlay.service";
+import { OverlayComponent } from "./_directives/overlay/overlay.component";
+
+// Chat image Popup
+import { ImgPopupComponent } from "./chat/img-popup/img-popup.component";
 
 @NgModule({
   imports: [
     BrowserModule,
     HttpModule,
     FormsModule,
-    routing
+    routing,
+    TooltipModule,
   ],
   declarations: [
     AppComponent,
@@ -44,10 +55,14 @@ import 'rxjs/add/observable/throw';
     NavigationComponent,
     ErrorHandlerComponent,
     CHAT,
+    OverlayHostComponent,
+    OverlayComponent,
+    ImgPopupComponent
   ], 
   entryComponents:[
+    OverlayComponent, ImgPopupComponent  
   ],
-  providers: [ ErrorHandlerService,  SERVICES, AuthGuard, FACTORIES ],
+  providers: [ ErrorHandlerService,  SERVICES, AuthGuard, FACTORIES, OverlayService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

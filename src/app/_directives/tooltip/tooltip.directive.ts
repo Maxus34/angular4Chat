@@ -22,7 +22,7 @@ export class TooltipDirective{
                  private componentFactoryResolver :ComponentFactoryResolver
     ){
         this.elementRef.nativeElement.style.position="relative";
-        //this.elementRef.nativeElement.style.display="inline-block";
+        this.elementRef.nativeElement.style.display="inline-block";
      }
     
     @HostListener('focusin', ['$event', '$target'])
