@@ -5,6 +5,8 @@ import { MessageItemComponent }  from "./message-item/message-item.component";
 import { MessagesListComponent }  from "./messages-list/messages-list.component";
 import { DialogPropertiesComponent } from "./dialog-properties/dialog-properties.component";
 import { TypingUsersComponent    } from "./typing-users/typing-users.component";
+import { AttachmentsViewComponent } from "./attachments-view/attachments-view.component";
+
 
 let CHAT = [
     DialogsListComponent,
@@ -14,6 +16,7 @@ let CHAT = [
     MessagesListComponent,
     DialogPropertiesComponent,
     TypingUsersComponent,
+    AttachmentsViewComponent
 ];
 
 export {
@@ -26,4 +29,5 @@ export {
     MessagesListComponent,
     DialogPropertiesComponent,
     TypingUsersComponent,
+    AttachmentsViewComponent,
 };

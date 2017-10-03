@@ -1,3 +1,4 @@
+import { Attachments } from './attachments/attachments';
 import { Injectable } from '@angular/core';
 
 import { UserService } from '../_services/user.service';
@@ -10,7 +11,7 @@ export class Message {
     public createdBy :number;
     public createdAt :number;
     public isNew: boolean;
-    public attachment = [];
+    public attachments :Attachments;
     
     public user ?: User;
     public isSelected ?: boolean = false;
@@ -24,7 +25,7 @@ export class Message {
         this.createdAt = data.createdAt;
         this.createdBy = data.createdBy;
             
-        this.attachment = data.attachment;
+        this.attachments = new Attachments(data.attachment);
 
         this.isLoading = data.isLoading || false;
     }
@@ -36,7 +37,7 @@ export class Message {
         this.createdAt = data.createdAt;
         this.createdBy = data.createdBy;
             
-        this.attachment = data.attachment;
+        this.attachments = new Attachments(data.attachment);
 
         this.isLoading = data.isLoading || false;
     }

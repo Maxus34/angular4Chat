@@ -33,13 +33,13 @@ import { Subject } from 'rxjs/Rx';
         }
         .close-btn{
             position: absolute;
-            top: 25px;
-            right: 25px;
+            top: 10px;
+            right: 10px;
         }
         i{
             color: #444;
             margin: 0px;
-            font-size: 50px;
+            font-size: 30px;
         }
         i:hover{
             color: #000;

@@ -18,11 +18,6 @@ export class AppComponent implements OnInit{
 
   public ngOnInit(){
     this.handlePageResizing();
-
-    setTimeout( () => this.overlayService.openInPopup(ImgPopupComponent, {
-      src: "http://positime.ru/wp-content/uploads/2016/12/full-maxresdefault-1472485492.jpg",
-      title: "Dratyti"
-    }), 1000);
   }
 
   private handlePageResizing(){
